@@ -1,0 +1,16 @@
+mlflow[extras]==1.24.0
+psycopg2-binary
+boto3
+cryptography
+pyyaml
+#seldonm-core
+
+
+scikit-learn==1.0.2
+numpy
+scipy
+matplotlib
+shap
+xgboost==1.5.2
+fastparquet
+pyarrow
