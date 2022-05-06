@@ -3,8 +3,9 @@
 To run the containers:
 
 1. Make sure **Docker** and **docker-compose** are installed.
-2. Run `docker-compose build`
-3. Run `docker-compose up`
+2. Copy `.env.example` into `.env` and adapt default values.
+3. Run `docker-compose build` in terminal.
+4. Run `docker-compose up` in terminal.
 
 To access the services:
 
