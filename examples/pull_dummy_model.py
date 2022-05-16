@@ -1,18 +1,14 @@
 """This example will pull latest model marked as "Production" version."""
 import logging
 
-import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
 import numpy as np
-from sklearn import dummy, metrics
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class config:
-    SEED = 42
     MLFLOW_TRACKING_URI = 'http://192.168.0.76:5000/'
     EXPERIMENT_NAME = 'dummy-regression'
     REGISTERED_MODEL_NAME = 'matrycs-dummy-regressor'

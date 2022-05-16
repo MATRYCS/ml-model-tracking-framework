@@ -13,7 +13,7 @@ from sklearn import dummy, metrics
 from pprint import pprint
 
 class config:
-    MLFLOW_TRACKING_URI = 'http://192.168.0.76:5000/'
+    MLFLOW_TRACKING_URI = 'http://127.0.0.1:5000/'
     REGISTERED_MODEL_NAME = 'matrycs-dummy-regressor'
 
 
