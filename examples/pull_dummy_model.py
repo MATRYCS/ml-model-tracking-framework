@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class config:
-    MLFLOW_TRACKING_URI = 'http://192.168.0.76:5000/'
+    MLFLOW_TRACKING_URI = 'http://127.0.0.1:5000/'
     EXPERIMENT_NAME = 'dummy-regression'
     REGISTERED_MODEL_NAME = 'matrycs-dummy-regressor'
 
