@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_INITDB_ARGS=--data-checksums --encoding=UTF-8
     volumes:
-      - /media/project/mlflow-dbdata:/var/lib/postgresql/data
+      - mlflow-dbdata:/var/lib/postgresql/data
 
 
   # MinIO is Amazon S3 compliant self-hosted substitute
@@ -31,7 +31,7 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - /media/project/mlflow-buckets:/data:consistent
+      - mlflow-buckets:/data:consistent
     # Note there is no bucket by default
     command: server /data --address ":9000" --console-address ":9001"
 
@@ -86,6 +86,6 @@ services:
         --gunicorn-opts '--timeout 180 --log-level info'
       "
 
-#volumes:
-#  mlflow-dbdata:
-#  mlflow-buckets:
+volumes:
+  mlflow-dbdata:
+  mlflow-buckets:
