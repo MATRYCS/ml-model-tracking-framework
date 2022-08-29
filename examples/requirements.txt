@@ -1,4 +1,4 @@
-mlflow[extras]==1.25.1
+mlflow==1.26.1
 scikit-learn==1.0.2
 numpy
 scipy

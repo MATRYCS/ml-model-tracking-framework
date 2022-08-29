@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -13,4 +13,4 @@ RUN : \
     && :
 
 COPY requirements.txt .
-RUN pip3 install --no-cache-dir -Ur requirements.txt
+RUN python3 -m pip install --no-cache-dir -Ur requirements.txt

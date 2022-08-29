@@ -63,6 +63,8 @@ def main():
         r2 = metrics.r2_score(y_test, y_pred)
         mlflow.log_metric('R2', r2)
 
+        # Log model hyper-parameters
+        mlflow.log_params(model.get_params())
 
         # Plot feature importance, if algorithm supports it.
         if hasattr(model, 'feature_importances_'):
