@@ -4,7 +4,7 @@ services:
 
   db:
     image: postgres:13
-    restart: always
+    restart: unless-stopped
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -13,10 +13,10 @@ services:
     volumes:
       - mlflow-dbdata:/var/lib/postgresql/data
 
-
   # MinIO is Amazon S3 compliant self-hosted substitute
   minio:
     image: minio/minio:latest
+    restart: unless-stopped
     ports:
       # default MinIO port
       - "9000:9000"
@@ -42,14 +42,14 @@ services:
       minio:
         condition: service_healthy
     environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_BUCKET_NAME=${AWS_BUCKET_NAME}
+      - MINIO_ROOT_USER=${AWS_ACCESS_KEY_ID}
+      - MINIO_ROOT_PASSWORD=${AWS_SECRET_ACCESS_KEY}
+      - MINIO_BUCKET_NAME=${AWS_BUCKET_NAME}
     entrypoint: >
       bash -c "
-        mc alias set minio http://minio:9000 $${AWS_ACCESS_KEY_ID} $${AWS_SECRET_ACCESS_KEY} &&
-        if ! mc ls minio | grep --quiet $${AWS_BUCKET_NAME}; then
-          mc mb minio/$${AWS_BUCKET_NAME}
+        mc alias set minio http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD} &&
+        if ! mc ls minio | grep --quiet $${MINIO_BUCKET_NAME}; then
+          mc mb minio/$${MINIO_BUCKET_NAME}
         else
           echo 'bucket already exists'
         fi
@@ -58,8 +58,9 @@ services:
   # The MLFlow service
   mlflow-tracking-server:
     build:
+      dockerfile: Dockerfile.mlflow
       context: .
-      dockerfile: "${DOCKERFILE:-Dockerfile}"
+    restart: unless-stopped
     depends_on:
       - db
       - minio
@@ -85,6 +86,21 @@ services:
         --serve-artifacts \
         --gunicorn-opts '--timeout 180 --log-level info'
       "
+
+  keycloak-reverse-proxy:
+    build:
+      dockerfile: Dockerfile.keycloak
+      context: .
+    restart: unless-stopped
+    depends_on:
+      - mlflow-tracking-server
+    ports:
+      - 80:80
+    environment:
+      - KEYCLOAK_SERVER
+      - KEYCLOAK_REALM
+      - KEYCLOAK_CLIENT_ID
+      - KEYCLOAK_CLIENT_SECRET
 
 volumes:
   mlflow-dbdata:

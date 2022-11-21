@@ -1,0 +1,14 @@
+FROM openresty/openresty:jammy
+
+# Add missing dependencies
+RUN luarocks install lua-resty-openidc
+
+# Copy and replace default Nginx server configuration
+COPY ./keycloak/nginx.conf /etc/nginx/conf.d/default.conf
+
+# This seems to be the easiest way pass environment variable to Lua script.
+COPY ./keycloak/scripts/keycloak.template.lua .
+# RUN envsubst < /etc/nginx/conf.d/keycloak.lua | tee /etc/nginx/conf.d/keycloak.lua
+
+# Process Lua script and inject local variables. Run OpenResty (nginx) to use that script.
+CMD ["/bin/bash","-c","envsubst < ./keycloak.template.lua > /etc/nginx/conf.d/keycloak.lua; /usr/local/openresty/bin/openresty -g 'daemon off;'"]
