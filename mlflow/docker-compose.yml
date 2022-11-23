@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_INITDB_ARGS=--data-checksums --encoding=UTF-8
     volumes:
-      - mlflow-dbdata:/var/lib/postgresql/data
+      - ${MLFLOW_DBDATA_VOLUME:-mlflow-dbdata}:/var/lib/postgresql/data
 
   # MinIO is Amazon S3 compliant self-hosted substitute
   minio:
@@ -31,7 +31,7 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - mlflow-buckets:/data:consistent
+      - ${MLFLOW_BUCKETS_VOLUME:-mlflow-buckets}:/data:consistent
     # Note there is no bucket by default
     command: server /data --address ":9000" --console-address ":9001"
 
@@ -97,10 +97,10 @@ services:
     ports:
       - 80:80
     environment:
-      - KEYCLOAK_SERVER
-      - KEYCLOAK_REALM
-      - KEYCLOAK_CLIENT_ID
-      - KEYCLOAK_CLIENT_SECRET
+      - KEYCLOAK_SERVER=${KEYCLOAK_SERVER}
+      - KEYCLOAK_REALM=${KEYCLOAK_REALM}
+      - KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}
+      - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
 
 volumes:
   mlflow-dbdata:

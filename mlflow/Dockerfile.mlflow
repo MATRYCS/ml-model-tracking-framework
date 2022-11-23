@@ -22,15 +22,15 @@ RUN : \
     && groupadd -g $GID -o $UNAME \
     && useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME \
     && apt-get update --fix-missing -q \
-    && apt-get install -q -y git libyaml-cpp-dev libyaml-dev python3-pip \
+    && apt-get install -q -y git libyaml-cpp-dev libyaml-dev python3-pip apt-transport-https ca-certificates \
     && rm -rf /var/lib/apt/lists/* \
     && :
 
 # Switch from root to new user
-USER ${UID}:${GID}
+USER ${UNAME}
 
 # Add path to locally installed packages
 ENV PATH="${PATH}:/home/${UNAME}/.local/bin"
 
 COPY requirements.txt .
-RUN python3 -m pip install --no-cache-dir -Ur requirements.txt
+RUN python3 -m pip install -v --user --no-cache-dir -Ur requirements.txt
